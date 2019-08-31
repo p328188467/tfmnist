@@ -44,8 +44,8 @@ def train(model,msc,epoch):
     ##  featurewise_center=True,
     ##  featurewise_std_normalization=True,
       rotation_range=20,
-      width_shift_range=0.15,
-      height_shift_range=0.15)
+      width_shift_range=0.10,
+      height_shift_range=0.10)
     ##  horizontal_flip=True)
 	
     mnist = input_data.read_data_sets(DATA_DIR, one_hot=True, validation_size=0)
@@ -100,13 +100,13 @@ def train(model,msc,epoch):
         endtime = datetime.datetime.now()
         deltatime = (endtime-begintime)
         td = total_secends(deltatime)
+        deltaacc = accuracy - last_acc
         loss, accuracy = model.evaluate(eval_data, eval_labels)
         theta = deltaacc / td / (1-accuracy)
         remaintime = remaintime- td
         numpara = model.count_params()
         npfitness = 0.0001 * numpara/(28*28*10)
         msc.totaltime = msc.totaltime + td     
-      deltaacc = accuracy - last_acc
       if deltaacc < check_gap:
         break
     
@@ -136,7 +136,7 @@ def main(unused_argv):
       for d in dirs:
         modelpath = os.path.join(epochpath, d)
         if os.path.isdir(modelpath):
-          mod_lock = dlm.lock(modelpath,7200*1000)
+          mod_lock = dlm.lock(modelpath,10800*1000)
           if not mod_lock:
             continue
           if os.path.exists(modelpath+'/'+'result'):
