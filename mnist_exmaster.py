@@ -5,7 +5,7 @@ import keras
 import time
 from keras.models import Model
 from mnist_model import ExNet
-from mnist_node import NetNode, ModelString, Modresult
+from mnist_node import NetNode, ModelString, Modresult, listDistance
 from keras.layers import Input, add, Reshape, Flatten, Dense, Dropout, Conv2D, MaxPooling2D
 from keras.utils import plot_model
 import os, errno
@@ -164,10 +164,10 @@ def main(unused_argv):
         topp = poplist[0]
         plnew.obj_list.append(model_des(topp[0],topp[1].fitness))
         for p in poplist[1:]:
-          ms = ModelString.load(p.filename)
+          ms = ModelString.load(p[0])
           ispushed = True
-          for t in plnew.obj_list:
-            tms = ModelString.load(t.filename)
+          for tn in plnew.obj_list:
+            tms = ModelString.load(tn.filename)
             dis = listDistance(ms.nodelist,tms.nodelist)
             if dis < 4:
               ispushed = False
