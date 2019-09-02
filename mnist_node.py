@@ -56,19 +56,22 @@ class NetNode:
 def listDistance(l1,l2):
   matrix = [[ 0 for j in range(len(l2) + 1)] for i in range(len(l1) + 1)]
   for i in range(1,len(l1)+1):
-    matrix[i][0] = l1[i-1].epoch
+    matrix[i][0] = l1[i-1].epoch+1
+    print(matrix[i][0])
 
   for j in range(1,len(l2)+1):
-    matrix[0][j] = l2[j-1].epoch
+    matrix[0][j] = l2[j-1].epoch+1
+    print(matrix[0][j])
 
   for i in range(1, len(l1)+1):
     for j in range(1, len(l2)+1):
       if(l1[i-1].ntype == l2[j-1].ntype ):
         d = abs(l1[i-1].epoch - l2[j-1].epoch)
       else:
-        d = abs(l1[i-1].epoch + l2[j-1].epoch)
-    matrix[i][j] = min(matrix[i-1][j] + l1[i-1].epoch, matrix[i][j-1]+l2[j-1].epoch, matrix[i-1][j-1]+d)
-
+        d = abs(l1[i-1].epoch + l2[j-1].epoch +2)
+      matrix[i][j] = min(matrix[i-1][j] + l1[i-1].epoch+1, matrix[i][j-1]+l2[j-1].epoch+1, matrix[i-1][j-1]+d)
+      print(d,matrix[i][j])
+  print(matrix)
   return matrix[len(l1)][len(l2)]
 
 

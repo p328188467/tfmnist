@@ -74,7 +74,8 @@ def main(argv):
     msc = ModelString.load(argv[1])
     mod = msc.load_model()
     mod.summary()
-    print('training time:',msc.totaltime) 
+    print('training time:',msc.totaltime)
+    print(msc) 
     exit()
   for i in range(0,50):  
     epochpath=DATAROOT+'/'+str(i)
