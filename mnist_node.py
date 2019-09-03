@@ -66,7 +66,7 @@ def listDistance(l1,l2):
   for i in range(1, len(l1)+1):
     for j in range(1, len(l2)+1):
       if(l1[i-1].ntype == l2[j-1].ntype ):
-        d = abs(l1[i-1].epoch - l2[j-1].epoch)
+        d = abs(l1[i-1].deep - l2[j-1].deep)+abs(l1[i-1].width - l2[j-1].width)+abs(l1[i-1].dropout_val - l2[j-1].dropout_val)
       else:
         d = abs(l1[i-1].epoch + l2[j-1].epoch +2)
       matrix[i][j] = min(matrix[i-1][j] + l1[i-1].epoch+1, matrix[i][j-1]+l2[j-1].epoch+1, matrix[i-1][j-1]+d)
