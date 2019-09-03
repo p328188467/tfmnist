@@ -64,17 +64,17 @@ def train(model,msc,epoch):
     check_gap = 0.01/epoch
     if msc.lastacc == 0:	
       model.compile(loss=keras.metrics.categorical_crossentropy,
-              optimizer=keras.optimizers.SGD(lr=0.001),
+              optimizer=keras.optimizers.Adamax(),##adam
               metrics=['accuracy'])
 
       batches = 0
       ##model.fit(train_data, train_labels, epochs=1, batch_size=64, verbose=1, validation_split=0.05)
       ##model.summary()    
-      for  x_batch, y_batch in datagen.flow(train_data, train_labels, batch_size=256):
-        model.fit(x_batch, y_batch,batch_size=32)
+      for  x_batch, y_batch in datagen.flow(train_data, train_labels, batch_size=1024):##256
+        model.fit(x_batch, y_batch,batch_size=256)
         batches += 1
     #   break
-        if batches >= np.size(train_data,0) / 256:
+        if batches >= np.size(train_data,0) / 1024:
           # 我们需要手动打破循环，
           # 因为生成器会无限循环
           break
