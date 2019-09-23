@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import redis
 import pickle
 import keras
 import time
