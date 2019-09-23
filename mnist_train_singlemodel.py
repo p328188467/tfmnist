@@ -7,8 +7,10 @@ from mnist_model import ExNet
 from mnist_node import NetNode,ModelString, Modresult
 from keras.layers import Input, add, Reshape, Flatten, Dense, Dropout, Conv2D, MaxPooling2D
 from keras.utils import plot_model
+import keras.callbacks.callbacks as kcallbacks
 import os
 import numpy as np
+from keras.callbacks import TensorBoard
 
 from sklearn.utils import shuffle
 from tensorflow.examples.tutorials.mnist import input_data
@@ -16,6 +18,7 @@ from mnist_exmaster import task
 import redlock
 import math
 import datetime
+import sys
 from keras.preprocessing.image import ImageDataGenerator 
 
 DATA_DIR = './fashion-minst/'
@@ -30,7 +33,7 @@ PLANTING=1
 GROWING=2
 HARVESTING=3
 WORKER=206
-TRAIN_EPOCH=30
+TRAIN_EPOCH=50
 CHECK_TIME=600
 
 def total_secends(td):
@@ -65,36 +68,35 @@ def train(model,msc):
               optimizer=keras.optimizers.Adamax(),##adam
               metrics=['accuracy'])
 
-    datagen.fit(x_train)
+    datagen.fit(train_data)
     best_weights_filepath = './best_weights.hdf5'
     earlyStopping = kcallbacks.EarlyStopping(monitor='accuracy', patience=5, verbose=1, mode='max')
     saveBestModel = kcallbacks.ModelCheckpoint(best_weights_filepath, monitor='accuracy', verbose=1, save_best_only=True, mode='auto')
 
-    history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
-                    steps_per_epoch=len(x_train) / 32, epochs=TRAIN_EPOCH, workers=4, callbacks=[earlyStopping, saveBestModel, TensorBoard(log_dir='./tmp/log')])
+    history = model.fit_generator(datagen.flow(train_data, train_labels, batch_size=32),
+                    steps_per_epoch=len(train_data) / 32, epochs=TRAIN_EPOCH, workers=4, callbacks=[earlyStopping, saveBestModel, TensorBoard(log_dir='./tmp/log')])
     
     loss, accuracy = model.evaluate(eval_data, eval_labels)
     
     print('Test loss:', loss)
     print('Accuracy:', accuracy)
 
-    return loss,accuracy,npfitness
+    return loss,accuracy
 
   
   
   
-def main(unused_argv):
+def main(argv):
 
   if len(argv) > 0:
     modelpath = argv[0]
     d = argv[1]
-    modelpath = os.path.join(epochpath, d)
     modelfilepath = modelpath+'/'+d
     print('training modelpath:',modelfilepath)
     msc = ModelString.load(modelfilepath)
     mod = msc.load_model()
     msc.load_weights(mod,by_name=True)
-    loss,acc,np =train(mod,msc)
+    loss,acc = train(mod,msc)
     mod.summary()
     exit()
 
@@ -102,6 +104,6 @@ def main(unused_argv):
 
   
 if __name__ == "__main__":
-  main(None)
+  main(sys.argv[1:])
     
 
