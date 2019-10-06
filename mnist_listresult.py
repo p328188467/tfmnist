@@ -77,7 +77,7 @@ def main(argv):
     print('training time:',msc.totaltime)
     print(msc) 
     exit()
-  for i in range(0,50):  
+  for i in range(0,60):  
     epochpath=DATAROOT+'/'+str(i)
     if os.path.exists(epochpath):
       dirs = os.listdir(epochpath)

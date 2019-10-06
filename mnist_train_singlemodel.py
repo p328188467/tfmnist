@@ -33,7 +33,7 @@ PLANTING=1
 GROWING=2
 HARVESTING=3
 WORKER=206
-TRAIN_EPOCH=50
+TRAIN_EPOCH=300
 CHECK_TIME=600
 
 def total_secends(td):
@@ -44,11 +44,11 @@ def train(model,msc):
     print(keras.__version__)
     datagen = ImageDataGenerator(
     ##  featurewise_center=True,
-    ##  featurewise_std_normalization=True,
+      featurewise_std_normalization=True,
       rotation_range=20,
       width_shift_range=0.10,
-      height_shift_range=0.10)
-    ##  horizontal_flip=True)
+      height_shift_range=0.10,
+      horizontal_flip=True)
     
     mnist = input_data.read_data_sets(DATA_DIR, one_hot=True, validation_size=0)
     train_data = mnist.train.images  # Returns np.array
@@ -70,7 +70,7 @@ def train(model,msc):
 
     datagen.fit(train_data)
     best_weights_filepath = './best_weights.hdf5'
-    earlyStopping = kcallbacks.EarlyStopping(monitor='accuracy', patience=5, verbose=1, mode='max')
+    earlyStopping = kcallbacks.EarlyStopping(monitor='accuracy', patience=8, verbose=1, mode='max')
     saveBestModel = kcallbacks.ModelCheckpoint(best_weights_filepath, monitor='accuracy', verbose=1, save_best_only=True, mode='auto')
 
     history = model.fit_generator(datagen.flow(train_data, train_labels, batch_size=32),
